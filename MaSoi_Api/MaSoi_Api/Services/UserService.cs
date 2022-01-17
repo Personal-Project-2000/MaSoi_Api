@@ -28,8 +28,11 @@ namespace MaSoi_Api.Services
         public async Task<List<User>> GetAsync() =>
             await _userCollection.Find(_ => true).ToListAsync();
 
-        public async Task<User?> GetAsync(string id) =>
-            await _userCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public async Task<User?> GetTk(string Tk, string Pass) =>
+            await _userCollection.Find(x => x.Tk == Tk && x.Pass == Pass).FirstOrDefaultAsync();
+
+        public async Task<User?> CheckTk(string Tk) =>
+            await _userCollection.Find(x => x.Tk == Tk).FirstOrDefaultAsync();
 
         public async Task CreateAsync(User newUser) =>
             await _userCollection.InsertOneAsync(newUser);

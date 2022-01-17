@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MaSoi_Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/")]
     public class UserController : Controller
     {
         private readonly UserService _userService;
@@ -22,21 +22,36 @@ namespace MaSoi_Api.Controllers
             await _userService.GetAsync();
 
         [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<User>> Get(string id)
+        [Route("SignIn")]
+        public async Task<ActionResult<User>> Get(string Tk, string Pass)
         {
-            var book = await _userService.GetAsync(id);
+            //Hash mật khẩu
+            Pass = Other.MD5.CreateMD5(Pass);
 
-            if (book is null)
+            var user = await _userService.GetTk(Tk, Pass);
+
+            if (user is null)
             {
-                return NotFound();
+                return Ok(new Response.Message(0, "Tài khoản hoặc mật khẩu bị sai", null));
             }
 
-            return book;
+            return Ok(new Response.Message(1, "Đăng nhập thành công", null));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(User newUser)
+        [Route("Registration")]
+        public async Task<IActionResult> Registration(User newUser)
         {
+            //kiểm tra tìa khoản đã tồn tại
+            var user = await _userService.CheckTk(newUser.Tk);
+            if(user != null)
+            {
+                return Ok(new Response.Message(0, "Tài khoản đã tồn tại", null));
+            }
+
+            //Hash mật khẩu
+            newUser.Pass = Other.MD5.CreateMD5(newUser.Pass);
+
             await _userService.CreateAsync(newUser);
 
             return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
@@ -45,16 +60,16 @@ namespace MaSoi_Api.Controllers
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, User updatedUser)
         {
-            var user = await _userService.GetAsync(id);
+            //var user = await _userService.GetAsync(id);
 
-            if (user is null)
-            {
-                return NotFound();
-            }
+            //if (user is null)
+            //{
+            //    return NotFound();
+            //}
 
-            updatedUser.Id = user.Id;
+            //updatedUser.Id = user.Id;
 
-            await _userService.UpdateAsync(id, updatedUser);
+            //await _userService.UpdateAsync(id, updatedUser);
 
             return NoContent();
         }
@@ -62,14 +77,14 @@ namespace MaSoi_Api.Controllers
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var user = await _userService.GetAsync(id);
+            //var user = await _userService.GetAsync(id);
 
-            if (user is null)
-            {
-                return NotFound();
-            }
+            //if (user is null)
+            //{
+            //    return NotFound();
+            //}
 
-            await _userService.RemoveAsync(user.Id);
+            //await _userService.RemoveAsync(user.Id);
 
             return NoContent();
         }
