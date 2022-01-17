@@ -33,6 +33,13 @@ namespace MaSoi_Api
                 Configuration.GetSection("MaSoiDatabase"));
 
             services.AddSingleton<UserService>();
+            services.AddSingleton<BaiRoomService>();
+            services.AddSingleton<RoomService>();
+            services.AddSingleton<HistoryService>();
+            services.AddSingleton<PlayerService>();
+            services.AddSingleton<BaiService>();
+            services.AddSingleton<StoryService>();
+            services.AddSingleton<RoomDetailService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
