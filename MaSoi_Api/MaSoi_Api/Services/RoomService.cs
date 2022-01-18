@@ -31,14 +31,17 @@ namespace MaSoi_Api.Services
         public async Task<Room?> GetAsync1(string id) =>
             await _roomCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+        public async Task<Room?> CheckPass(string id, string pass) =>
+            await _roomCollection.Find(x => x.Id == id && x.Pass == pass).FirstOrDefaultAsync();
+
         public async Task<Room?> GetAsync(string Number) =>
             await _roomCollection.Find(x => x.Number == Number).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Room newRoom) =>
+        public async Task CreateRoom(Room newRoom) =>
             await _roomCollection.InsertOneAsync(newRoom);
 
-        public async Task UpdateAsync(string id, Room updatedRoom) =>
-            await _roomCollection.ReplaceOneAsync(x => x.Id == id, updatedRoom);
+        public async Task UpdateAsync(Room updatedRoom) =>
+            await _roomCollection.ReplaceOneAsync(x => x.Id == updatedRoom.Id, updatedRoom);
 
         public async Task RemoveAsync(string id) =>
             await _roomCollection.DeleteOneAsync(x => x.Id == id);

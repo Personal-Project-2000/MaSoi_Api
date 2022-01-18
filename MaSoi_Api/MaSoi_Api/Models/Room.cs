@@ -14,6 +14,7 @@ namespace MaSoi_Api.Models
         public string Id { get; set; }
 
         public string Number { get; set; }
+        public string Pass { get; set; }
         public int VoteTime { get; set; }
         public int AdvocateTime { get; set; }
         public int Sl { get; set; }

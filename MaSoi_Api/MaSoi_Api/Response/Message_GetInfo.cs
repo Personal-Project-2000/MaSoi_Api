@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace MaSoi_Api.Response
 {
-    public class Message
+    public class Message_GetInfo
     {
         private int Status;
         private string Notification;
-        private string Id;
+        private User Acc;
 
-        public Message(int status, string notification, string id)
+        public Message_GetInfo(int status, string notification, User acc)
         {
             Status = status;
             Notification = notification;
-            Id = id;
+            Acc = acc;
         }
 
         public int Status1 { get => Status; set => Status = value; }
         public string Notification1 { get => Notification; set => Notification = value; }
-        public string Id1 { get => Id; set => Id = value; }
+        public User Acc1 { get => Acc; set => Acc = value; }
     }
 }

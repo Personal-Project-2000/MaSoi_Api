@@ -17,9 +17,9 @@ namespace MaSoi_Api.Controllers
         public UserController(UserService userService) =>
             _userService = userService;
 
-        [HttpGet]
-        public async Task<List<User>>  Get() =>
-            await _userService.GetAsync();
+        //[HttpGet]
+        //public async Task<List<User>>  Get() =>
+        //    await _userService.GetAsync();
 
         [HttpGet("{id:length(24)}")]
         [Route("SignIn_Get")]
@@ -68,7 +68,7 @@ namespace MaSoi_Api.Controllers
 
             await _userService.CreateAsync(newUser);
 
-            return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+            return Ok(new Response.Message(0, "Tạo tài khoản thành công", null));
         }
 
         [HttpPut("{id:length(24)}")]

@@ -28,16 +28,22 @@ namespace MaSoi_Api.Services
         public async Task<List<RoomDetail>> GetAsync() =>
             await _roomDetailCollection.Find(_ => true).ToListAsync();
 
-        public async Task<RoomDetail?> GetAsync(string Tk, string roomId) =>
+        public List<RoomDetail> GetAllPlayer(string roomId) =>
+            _roomDetailCollection.Find(x => x.RoomId == roomId).ToList();
+
+        public async Task<RoomDetail> GetPlayerHeader(string roomId) =>
+            await _roomDetailCollection.Find(x => x.RoomId == roomId).FirstOrDefaultAsync();
+
+        public async Task<RoomDetail> GetPlayer(string Tk, string roomId) =>
             await _roomDetailCollection.Find(x => x.Tk == Tk && x.RoomId == roomId).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(RoomDetail newRoomDetail) =>
+        public async Task InsertPlayer(RoomDetail newRoomDetail) =>
             await _roomDetailCollection.InsertOneAsync(newRoomDetail);
 
-        public async Task UpdateAsync(string id, RoomDetail updatedRoomDetail) =>
-            await _roomDetailCollection.ReplaceOneAsync(x => x.Id == id, updatedRoomDetail);
+        public async Task UpdateAsync(RoomDetail updatedRoomDetail) =>
+            await _roomDetailCollection.ReplaceOneAsync(x => x.Id == updatedRoomDetail.Id, updatedRoomDetail);
 
-        public async Task RemoveAsync(string id) =>
-            await _roomDetailCollection.DeleteOneAsync(x => x.Id == id);
+        public async Task RemoveAsync(string RoomId, string Tk) =>
+            await _roomDetailCollection.DeleteOneAsync(x => x.RoomId == RoomId && x.Tk == Tk);
     }
 }
