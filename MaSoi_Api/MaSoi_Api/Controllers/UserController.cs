@@ -22,8 +22,8 @@ namespace MaSoi_Api.Controllers
             await _userService.GetAsync();
 
         [HttpGet("{id:length(24)}")]
-        [Route("SignIn")]
-        public async Task<ActionResult<User>> Get(string Tk, string Pass)
+        [Route("SignIn_Get")]
+        public async Task<ActionResult<User>> SignIn(string Tk, string Pass)
         {
             //Hash mật khẩu
             Pass = Other.MD5.CreateMD5(Pass);
@@ -38,8 +38,22 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Đăng nhập thành công", null));
         }
 
+        [HttpGet("{id:length(24)}")]
+        [Route("GetInfo_Get")]
+        public async Task<ActionResult<User>> GetInfo(string Tk)
+        {
+            var user = await _userService.CheckTk(Tk);
+
+            if (user is null)
+            {
+                return Ok(new Response.Message_GetInfo(0, "Lấy dữ liệu thất bại", null));
+            }
+
+            return Ok(new Response.Message_GetInfo(1, "Lấy dữ liệu thành công", user));
+        }
+
         [HttpPost]
-        [Route("Registration")]
+        [Route("Registration_Post")]
         public async Task<IActionResult> Registration(User newUser)
         {
             //kiểm tra tìa khoản đã tồn tại
@@ -58,20 +72,44 @@ namespace MaSoi_Api.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, User updatedUser)
+        [Route("ChangePass_Put")]
+        public async Task<IActionResult> ChangePass(Request.ChangePass_Request input)
         {
-            //var user = await _userService.GetAsync(id);
+            //Hash mật khẩu
+            input.PassOld = Other.MD5.CreateMD5(input.PassOld);
 
-            //if (user is null)
-            //{
-            //    return NotFound();
-            //}
+            var user = await _userService.GetTk(input.Tk, input.PassOld);
 
-            //updatedUser.Id = user.Id;
+            if (user is null)
+            {
+                return Ok(new Response.Message(0, "Mật khẩu củ bị sai", null));
+            }
 
-            //await _userService.UpdateAsync(id, updatedUser);
+            //Hash mật khẩu
+            user.Pass = Other.MD5.CreateMD5(user.Pass);
 
-            return NoContent();
+            await _userService.UpdateAsync(user);
+
+            return Ok(new Response.Message(1, "Thay đổi mật khẩu thành công", null));
+        }
+
+        [HttpPut("{id:length(24)}")]
+        [Route("UpdateSetting_Put")]
+        public async Task<IActionResult> UpdateSetting(Request.Setting_Request input)
+        {
+            var user = await _userService.CheckTk(input.Tk);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            user.Background = input.Background;
+            user.Language = input.Language;
+
+            await _userService.UpdateAsync(user);
+
+            return Ok(new Response.Message(1, "Cài đặt thành công", null));
         }
 
         [HttpDelete("{id:length(24)}")]

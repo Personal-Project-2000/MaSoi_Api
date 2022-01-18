@@ -37,8 +37,8 @@ namespace MaSoi_Api.Services
         public async Task CreateAsync(User newUser) =>
             await _userCollection.InsertOneAsync(newUser);
 
-        public async Task UpdateAsync(string id, User updatedUser) =>
-            await _userCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
+        public async Task UpdateAsync(User updatedUser) =>
+            await _userCollection.ReplaceOneAsync(x => x.Tk == updatedUser.Tk, updatedUser);
 
         public async Task RemoveAsync(string id) =>
             await _userCollection.DeleteOneAsync(x => x.Id == id);
