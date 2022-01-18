@@ -22,11 +22,14 @@ namespace MaSoi_Api.Services
                 maSoiDataBaseSetting.Value.DatabaseName);
 
             _storyCollection = mongoDatabase.GetCollection<Story>(
-                maSoiDataBaseSetting.Value.UserCollectionName);
+                maSoiDataBaseSetting.Value.StoryCollectionName);
         }
 
         public async Task<List<Story>> GetAsync() =>
             await _storyCollection.Find(_ => true).ToListAsync();
+
+        public List<Story> GetStory(string HistoryId) =>
+            _storyCollection.Find(x => x.HistoryId == HistoryId).ToList();
 
         public async Task<Story?> GetAsync(string id) =>
             await _storyCollection.Find(x => x.Id == id).FirstOrDefaultAsync();

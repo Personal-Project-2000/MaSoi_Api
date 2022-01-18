@@ -1,8 +1,10 @@
 ﻿using MaSoi_Api.Models;
 using MaSoi_Api.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +15,13 @@ namespace MaSoi_Api.Controllers
     public class UserController : Controller
     {
         private readonly UserService _userService;
+        private readonly IHostingEnvironment _HostEnvironment;
 
-        public UserController(UserService userService) =>
+        public UserController(UserService userService, IHostingEnvironment hostingEnvironment)
+        {
             _userService = userService;
+            _HostEnvironment = hostingEnvironment;
+        }
 
         //[HttpGet]
         //public async Task<List<User>>  Get() =>
@@ -125,6 +131,83 @@ namespace MaSoi_Api.Controllers
             //await _userService.RemoveAsync(user.Id);
 
             return NoContent();
+        }
+
+        [Route("UpdateImg_Put")]
+        [HttpPut]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
+        public async Task<IActionResult> UpdateImg(string Tk)
+        {
+            var user = await _userService.CheckTk(Tk);
+            string contentRootPath = _HostEnvironment.ContentRootPath;
+
+            try
+            {
+                var photo = HttpContext.Request.Form.Files;
+                foreach (var item in photo)
+                {
+                    string[] name = item.FileName.Split(".");
+                    string imgName = "Picture/" + name[0] + "_" + Tk + "." + name[1];
+                    var imaageSavePath = Path.Combine(contentRootPath, "Picture", name[0] + "_" + Tk + "." + name[1]);
+                    if (!System.IO.File.Exists(imaageSavePath))
+                    {
+                        user.Img = "https://masoi.covid21tsp.space/"+imgName;
+                        await _userService.UpdateAsync(user);
+                        var stream = System.IO.File.Create(imaageSavePath);
+                        item.CopyToAsync(stream);
+                    }
+                }
+            }
+            catch
+            {
+                return Ok(new Response.Message(0, "Thêm ảnh thất bại", null));
+            }
+            return Ok(new Response.Message(1, "Thêm ảnh thành công", null));
+        }
+
+        [Route("UpdateImgBack_Put")]
+        [HttpPut]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
+        public async Task<IActionResult> UpdateImgBack(string Tk)
+        {
+            var user = await _userService.CheckTk(Tk);
+            string contentRootPath = _HostEnvironment.ContentRootPath;
+
+            try
+            {
+                var photo = HttpContext.Request.Form.Files;
+                foreach (var item in photo)
+                {
+                    string[] name = item.FileName.Split(".");
+                    string imgName = "Picture/" + name[0] + "_" + Tk + "_BackGround." + name[1];
+                    var imaageSavePath = Path.Combine(contentRootPath, "Picture", name[0] + "_" + Tk + "_BackGround." + name[1]);
+                    if (!System.IO.File.Exists(imaageSavePath))
+                    {
+                        user.ImgBack = "https://masoi.covid21tsp.space/" + imgName;
+                        await _userService.UpdateAsync(user);
+                        var stream = System.IO.File.Create(imaageSavePath);
+                        item.CopyToAsync(stream);
+                    }
+                }
+            }
+            catch
+            {
+                return Ok(new Response.Message(0, "Thêm ảnh thất bại", null));
+            }
+            return Ok(new Response.Message(1, "Thêm ảnh thành công", null));
+        }
+
+        [Route("UpdateInfo_Put")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateInfo(string Tk, string Name)
+        {
+            var user = await _userService.CheckTk(Tk);
+
+            user.FullName = Name;
+
+            await _userService.UpdateAsync(user);
+
+            return Ok(new Response.Message(1, "Cập nhật dữ liệu thành công", null));
         }
     }
 }

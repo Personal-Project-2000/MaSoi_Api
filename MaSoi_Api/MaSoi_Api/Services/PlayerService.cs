@@ -28,6 +28,21 @@ namespace MaSoi_Api.Services
         public async Task<List<Player>> GetAsync() =>
             await _playerCollection.Find(_ => true).ToListAsync();
 
+        public List<Player> GetAllHistory(string Tk) =>
+            _playerCollection.Find(x => x.Tk == Tk).ToList();
+
+        public  Player GetPlayer(string Tk) =>
+             _playerCollection.Find(x => x.Tk == Tk).FirstOrDefault();
+
+        public List<Player> GetAllPlayer(string HistoryId) =>
+           _playerCollection.Find(x => x.HistoryId == HistoryId).ToList();
+
+        public int PlayerCount(string HistoryId) =>
+            _playerCollection.Find(x => x.HistoryId == HistoryId).ToList().Count();
+
+        public bool Win(string HistoryId, string Tk) =>
+            _playerCollection.Find(x => x.HistoryId == HistoryId & x.Tk == Tk).FirstOrDefault().Win;
+
         public async Task<Player?> GetAsync(string Tk, string historyId) =>
             await _playerCollection.Find(x => x.Tk == Tk && x.HistoryId == historyId).FirstOrDefaultAsync();
 

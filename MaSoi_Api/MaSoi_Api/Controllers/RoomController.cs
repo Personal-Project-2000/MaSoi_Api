@@ -26,7 +26,13 @@ namespace MaSoi_Api.Controllers
         [Route("CreateRoom_Post")]
         public async Task<IActionResult> CreateRoom(string Tk)
         {
-            Room newRoom = new Room();
+            var newRoom = await _roomService.GetRoomNull();
+
+            if(newRoom is null)
+            {
+                return Ok(new Response.Message(0, "Server hiện đang quá tải", null));
+            }
+
             newRoom.Sl = 1;
             newRoom.Status = true;
             newRoom.Format = true;
@@ -34,7 +40,7 @@ namespace MaSoi_Api.Controllers
             newRoom.VoteTime = 5;
             newRoom.Pass = "";
 
-            await _roomService.CreateRoom(newRoom);
+            await _roomService.UpdateAsync(newRoom);
 
             RoomDetail newPlayer = new RoomDetail();
             newPlayer.RoomId = newRoom.Id;
@@ -187,7 +193,7 @@ namespace MaSoi_Api.Controllers
 
             if (player.Count() < Amount)
             {
-                return Ok(new Response.Message(2, "Chưa đủ" + Amount + " người chơi", null));
+                return Ok(new Response.Message(2, "Chưa đủ " + Amount + " người chơi", null));
             }
 
             //Kiểm tra tất cả người chơi đã sẳn sàng và số lượng người chơi phải trên 5

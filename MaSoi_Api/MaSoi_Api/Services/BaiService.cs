@@ -31,6 +31,9 @@ namespace MaSoi_Api.Services
         public async Task<Bai?> GetAsync(string id) =>
             await _baiCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+        public string BaiName(string id) =>
+            _baiCollection.Find(x => x.Id == id).FirstOrDefault().Name;
+
         public async Task CreateAsync(Bai newBai) =>
             await _baiCollection.InsertOneAsync(newBai);
 

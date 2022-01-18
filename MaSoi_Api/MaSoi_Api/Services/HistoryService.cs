@@ -31,6 +31,12 @@ namespace MaSoi_Api.Services
         public async Task<History?> GetAsync(string id) =>
             await _historyCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+        public string GetTime(string id) =>
+            _historyCollection.Find(x => x.Id == id).FirstOrDefault().Time;
+
+        public string GetStartTime(string id) =>
+            _historyCollection.Find(x => x.Id == id).FirstOrDefault().StartTime;
+
         public async Task CreateAsync(History newHistory) =>
             await _historyCollection.InsertOneAsync(newHistory);
 

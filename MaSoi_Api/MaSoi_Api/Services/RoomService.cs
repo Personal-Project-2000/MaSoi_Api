@@ -28,6 +28,9 @@ namespace MaSoi_Api.Services
         public async Task<List<Room>> GetAsync() =>
             await _roomCollection.Find(_ => true).ToListAsync();
 
+        public async Task<Room> GetRoomNull() =>
+            await _roomCollection.Find(x => x.Sl == 0).FirstOrDefaultAsync();
+
         public async Task<Room?> GetAsync1(string id) =>
             await _roomCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
