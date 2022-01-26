@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\bin\Release\net5.0\publish\</_PublishTargetUrl>
+    <History>True|2022-01-22T02:25:53.2876003Z;True|2022-01-22T09:21:11.3038732+07:00;True|2022-01-22T09:21:06.3996077+07:00;</History>
+  </PropertyGroup>
+</Project>

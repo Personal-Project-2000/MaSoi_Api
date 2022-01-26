@@ -31,8 +31,8 @@ namespace MaSoi_Api.Services
         public async Task<User> GetTk(string Tk, string Pass) =>
             await _userCollection.Find(x => x.Tk == Tk && x.Pass == Pass).FirstOrDefaultAsync();
 
-        public async Task<User> CheckTk(string Tk) =>
-            await _userCollection.Find(x => x.Tk == Tk).FirstOrDefaultAsync();
+        public User CheckTk(string Tk) =>
+             _userCollection.Find(x => x.Tk == Tk).FirstOrDefault();
 
         public User GetPlayer(string Tk) =>
              _userCollection.Find(x => x.Tk == Tk).FirstOrDefault();

@@ -1,0 +1,71 @@
+[aspnetcorev2.dll] Initializing logs for 'C:\Program Files (x86)\IIS Express\Asp.Net Core Module\V2\aspnetcorev2.dll'. Process Id: 16724.. File Version: 13.1.20087.4. Description: IIS ASP.NET Core Module V2. Commit: 654cf06615981b190737101d3a1df39e57e20341.
+[aspnetcorev2.dll] Loading request handler:  'C:\Program Files (x86)\IIS Express\Asp.Net Core Module\V2\13.1.20087\aspnetcorev2_outofprocess.dll'
+[aspnetcorev2.dll] Creating handler application
+[aspnetcorev2_outofprocess.dll] Initializing logs for 'C:\Program Files (x86)\IIS Express\Asp.Net Core Module\V2\13.1.20087\aspnetcorev2_outofprocess.dll'. Process Id: 16724.. File Version: 13.1.20087.4. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 654cf06615981b190737101d3a1df39e57e20341.
+[aspnetcorev2_outofprocess.dll] Starting app_offline monitoring in application 'C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\'
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::FORWARDING_HANDLER
+[aspnetcorev2_outofprocess.dll] Starting file watcher thread
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::FORWARDING_HANDLER
+[aspnetcorev2_outofprocess.dll] Event Log: 'Application '/LM/W3SVC/2/ROOT' started process '11036' successfully and process '5700' is listening on port '38670'.' 
+End Event Log Message.
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 10 -- 24316 --072C9538
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 10 -- 4608 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 20 -- 4608 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 20 -- 24316 --072C9538
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 400000 -- 4608 --072C9538
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 20000 -- 4608 --072C9538
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 40000 -- 23564 --072C9538
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 800 -- 23564 --072C9538
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 1
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 0
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::~FORWARDING_HANDLER
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 400000 -- 4608 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 20000 -- 4608 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 40000 -- 23564 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 80000 -- 23564 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 1
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 40000 -- 1080 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 800 -- 1080 --072CB9A0
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 1
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 0
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::~FORWARDING_HANDLER
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::FORWARDING_HANDLER
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 10 -- 4608 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 20 -- 4608 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 400000 -- 4608 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 20000 -- 4608 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 40000 -- 1080 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 80000 -- 1080 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 1
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 40000 -- 23564 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnWinHttpCompletionInternal 800 -- 23564 --072CDE08
+
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 1
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::OnAsyncCompletion Done 0
+[aspnetcorev2_outofprocess.dll] FORWARDING_HANDLER::~FORWARDING_HANDLER
+[aspnetcorev2_outofprocess.dll] Event Log: 'Application '/LM/W3SVC/2/ROOT' with physical root 'C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\' shut down process with Id '11036' listening on port '38670'' 
+End Event Log Message.
+[aspnetcorev2.dll] ASPNET_CORE_GLOBAL_MODULE::OnGlobalConfigurationChange 'MACHINE/WEBROOT/APPHOST/MASOI_API'
+[aspnetcorev2.dll] Stopping application '/LM/W3SVC/2/ROOT'
+[aspnetcorev2_outofprocess.dll] Stopping file watcher thread

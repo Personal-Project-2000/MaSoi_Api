@@ -7,7 +7,7 @@ namespace MaSoi_Api.Request
 {
     public class SettingRoom_Request
     {
-        public string RoomId { get; set; }
+        public string Id { get; set; }
         public string Pass { get; set; }
         public bool Format { get; set; }
         public int AdvocateTime { get; set; }

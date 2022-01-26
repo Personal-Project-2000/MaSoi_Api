@@ -43,3 +43,4 @@ C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\obj\Debug\net5.0\M
 C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\obj\Debug\net5.0\ref\MaSoi_Api.dll
 C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\obj\Debug\net5.0\MaSoi_Api.pdb
 C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\obj\Debug\net5.0\MaSoi_Api.genruntimeconfig.cache
+C:\Users\xyzsy\OneDrive\Desktop\MaSoi_Api\MaSoi_Api\MaSoi_Api\bin\Debug\net5.0\web.config

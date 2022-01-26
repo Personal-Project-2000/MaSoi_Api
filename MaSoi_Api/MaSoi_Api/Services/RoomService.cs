@@ -25,8 +25,8 @@ namespace MaSoi_Api.Services
                 maSoiDataBaseSetting.Value.RoomCollectionName);
         }
 
-        public async Task<List<Room>> GetAsync() =>
-            await _roomCollection.Find(_ => true).ToListAsync();
+        public async Task<List<Room>> GetList() =>
+            await _roomCollection.Find(x => x.Status == true && x.Sl > 0).ToListAsync();
 
         public async Task<Room> GetRoomNull() =>
             await _roomCollection.Find(x => x.Sl == 0).FirstOrDefaultAsync();

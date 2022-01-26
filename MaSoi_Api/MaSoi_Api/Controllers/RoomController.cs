@@ -1,4 +1,5 @@
 ﻿using MaSoi_Api.Models;
+using MaSoi_Api.Response;
 using MaSoi_Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +21,15 @@ namespace MaSoi_Api.Controllers
             _roomService = roomService;
             _roomDetailService = roomDetailService;
             _userService = userService;
+        }
+
+        [HttpGet]
+        [Route("RoomList_Get")]
+        public async Task<IActionResult> RoomList()
+        {
+            var room = await _roomService.GetList();
+
+            return Ok(new Message_RoomList(1, "Lấy dữ liệu thành công", room));
         }
 
         [HttpPost]
@@ -53,11 +63,11 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Tạo phòng thành công", newRoom.Id));
         }
 
-        [HttpPut]
-        [Route("UpdateRoom_Put")]
+        [HttpPost]
+        [Route("UpdateRoom_Post")]
         public async Task<IActionResult> UpdateRoom(Request.SettingRoom_Request input)
         {
-            var room = await _roomService.GetAsync1(input.RoomId);
+            var room = await _roomService.GetAsync1(input.Id);
 
             if (room is null)
             {
@@ -74,8 +84,8 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Cài đặt phòng thành công", null));
         }
 
-        [HttpPut]
-        [Route("JoinRoom_Put")]
+        [HttpPost]
+        [Route("JoinRoom_Post")]
         public async Task<IActionResult> JoinRoom(Request.JoinRoom_Request input)
         {
             var room = await _roomService.CheckPass(input.RoomId, input.Pass);
@@ -117,7 +127,7 @@ namespace MaSoi_Api.Controllers
 
             foreach (var item in playerList)
             {
-                var user = await _userService.CheckTk(item.Tk);
+                var user = _userService.CheckTk(item.Tk);
 
                 Response.Player player = new Response.Player();
                 player.Tk = item.Tk;
@@ -132,8 +142,8 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message_GetRoom(1, "Lấy dữ liệu thành công", room, playerL));
         }
 
-        [HttpDelete]
-        [Route("ExitRoom_Delete")]
+        [HttpPost]
+        [Route("ExitRoom_Post")]
         public async Task<IActionResult> ExitRoom(string Tk, string RoomId)
         {
             var room = await _roomService.GetAsync1(RoomId);
@@ -144,6 +154,15 @@ namespace MaSoi_Api.Controllers
             }
 
             room.Sl--;
+
+            await _roomService.UpdateAsync(room);
+
+            if(room.Sl == 0)
+            {
+                await _roomDetailService.RemoveAsync(RoomId, Tk);
+
+                return Ok(new Response.Message(1, "Xóa dữ liệu thành công", null));
+            }
 
             //Trao quyền chủ phòng có người kế tiếp
             var player = await _roomDetailService.GetPlayer(Tk, RoomId);
@@ -156,14 +175,16 @@ namespace MaSoi_Api.Controllers
                 playerHeader.Boss = true;
                 await _roomDetailService.UpdateAsync(playerHeader);
             }
-
-            await _roomDetailService.RemoveAsync(RoomId, Tk);
+            else
+            {
+                await _roomDetailService.RemoveAsync(RoomId, Tk);
+            }
 
             return Ok(new Response.Message(1, "Xóa dữ liệu thành công", null));
         }
 
-        [HttpPut]
-        [Route("Ready_Put")]
+        [HttpPost]
+        [Route("Ready_Post")]
         public async Task<IActionResult> Ready(string Tk, string RoomId)
         {
             var player = await _roomDetailService.GetPlayer(Tk, RoomId);
@@ -180,8 +201,8 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Sẳn sàng thành công", null));
         }
 
-        [HttpPut]
-        [Route("Start_Put")]
+        [HttpPost]
+        [Route("Start_Post")]
         public async Task<IActionResult> Start(string RoomId, int Amount)
         {
             var player =  _roomDetailService.GetAllPlayer(RoomId);
@@ -199,6 +220,12 @@ namespace MaSoi_Api.Controllers
             //Kiểm tra tất cả người chơi đã sẳn sàng và số lượng người chơi phải trên 5
             if (player.Where(x => x.Status == true).Count() == player.Count())
             {
+                var room = await _roomService.GetAsync1(RoomId);
+
+                room.Status = false;
+
+                await _roomService.UpdateAsync(room);
+
                 return Ok(new Response.Message(1, "Tất cả đã sẳn sàng", null));
             }
 

@@ -2,6 +2,7 @@
 using MaSoi_Api.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,9 +18,9 @@ namespace MaSoi_Api.Controllers
         private readonly UserService _userService;
         private readonly IHostingEnvironment _HostEnvironment;
 
-        public UserController(UserService userService, IHostingEnvironment hostingEnvironment)
+        public UserController(IOptions<MaSoiDatabaseSettings> maSoiDataBaseSetting, IHostingEnvironment hostingEnvironment)
         {
-            _userService = userService;
+            _userService = new UserService(maSoiDataBaseSetting);
             _HostEnvironment = hostingEnvironment;
         }
 
@@ -46,16 +47,23 @@ namespace MaSoi_Api.Controllers
 
         [HttpGet("{id:length(24)}")]
         [Route("GetInfo_Get")]
-        public async Task<ActionResult<User>> GetInfo(string Tk)
+        public IActionResult GetInfo(string Tk)
         {
-            var user = await _userService.CheckTk(Tk);
-
-            if (user is null)
+            try
             {
-                return Ok(new Response.Message_GetInfo(0, "Lấy dữ liệu thất bại", null));
-            }
+                var user = _userService.CheckTk(Tk);
 
-            return Ok(new Response.Message_GetInfo(1, "Lấy dữ liệu thành công", user));
+                if (user is null)
+                {
+                    return Ok(new Response.Message_GetInfo(0, "Lấy dữ liệu thất bại", null));
+                }
+
+                return Ok(new Response.Message_GetInfo(1, "Lấy dữ liệu thành công", user));
+            }
+            catch(Exception e)
+            {
+                return Ok(new Response.Message_GetInfo(2, e.ToString(), null));
+            }
         }
 
         [HttpPost]
@@ -63,7 +71,7 @@ namespace MaSoi_Api.Controllers
         public async Task<IActionResult> Registration(User newUser)
         {
             //kiểm tra tìa khoản đã tồn tại
-            var user = await _userService.CheckTk(newUser.Tk);
+            var user = _userService.CheckTk(newUser.Tk);
             if(user != null)
             {
                 return Ok(new Response.Message(0, "Tài khoản đã tồn tại", null));
@@ -74,11 +82,11 @@ namespace MaSoi_Api.Controllers
 
             await _userService.CreateAsync(newUser);
 
-            return Ok(new Response.Message(0, "Tạo tài khoản thành công", null));
+            return Ok(new Response.Message(1, "Tạo tài khoản thành công", null));
         }
 
-        [HttpPut("{id:length(24)}")]
-        [Route("ChangePass_Put")]
+        [HttpPost]
+        [Route("ChangePass_Post")]
         public async Task<IActionResult> ChangePass(Request.ChangePass_Request input)
         {
             //Hash mật khẩu
@@ -92,18 +100,18 @@ namespace MaSoi_Api.Controllers
             }
 
             //Hash mật khẩu
-            user.Pass = Other.MD5.CreateMD5(user.Pass);
+            user.Pass = Other.MD5.CreateMD5(input.PassNew);
 
             await _userService.UpdateAsync(user);
 
             return Ok(new Response.Message(1, "Thay đổi mật khẩu thành công", null));
         }
 
-        [HttpPut("{id:length(24)}")]
-        [Route("UpdateSetting_Put")]
+        [HttpPost]
+        [Route("UpdateSetting_Post")]
         public async Task<IActionResult> UpdateSetting(Request.Setting_Request input)
         {
-            var user = await _userService.CheckTk(input.Tk);
+            var user = _userService.CheckTk(input.Tk);
 
             if (user is null)
             {
@@ -118,7 +126,7 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Cài đặt thành công", null));
         }
 
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
             //var user = await _userService.GetAsync(id);
@@ -133,12 +141,12 @@ namespace MaSoi_Api.Controllers
             return NoContent();
         }
 
-        [Route("UpdateImg_Put")]
-        [HttpPut]
+        [Route("UpdateImg_Post")]
+        [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
-        public async Task<IActionResult> UpdateImg(string Tk)
+        public async Task<IActionResult> UpdateImg(string Tk, string domain)
         {
-            var user = await _userService.CheckTk(Tk);
+            var user = _userService.CheckTk(Tk);
             string contentRootPath = _HostEnvironment.ContentRootPath;
 
             try
@@ -151,7 +159,7 @@ namespace MaSoi_Api.Controllers
                     var imaageSavePath = Path.Combine(contentRootPath, "Picture", name[0] + "_" + Tk + "." + name[1]);
                     if (!System.IO.File.Exists(imaageSavePath))
                     {
-                        user.Img = "https://masoi.covid21tsp.space/"+imgName;
+                        user.Img = domain+imgName;
                         await _userService.UpdateAsync(user);
                         var stream = System.IO.File.Create(imaageSavePath);
                         item.CopyToAsync(stream);
@@ -165,12 +173,12 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Thêm ảnh thành công", null));
         }
 
-        [Route("UpdateImgBack_Put")]
-        [HttpPut]
+        [Route("UpdateImgBack_Post")]
+        [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
-        public async Task<IActionResult> UpdateImgBack(string Tk)
+        public async Task<IActionResult> UpdateImgBack(string Tk, string domain)
         {
-            var user = await _userService.CheckTk(Tk);
+            var user = _userService.CheckTk(Tk);
             string contentRootPath = _HostEnvironment.ContentRootPath;
 
             try
@@ -183,7 +191,7 @@ namespace MaSoi_Api.Controllers
                     var imaageSavePath = Path.Combine(contentRootPath, "Picture", name[0] + "_" + Tk + "_BackGround." + name[1]);
                     if (!System.IO.File.Exists(imaageSavePath))
                     {
-                        user.ImgBack = "https://masoi.covid21tsp.space/" + imgName;
+                        user.ImgBack = domain + imgName;
                         await _userService.UpdateAsync(user);
                         var stream = System.IO.File.Create(imaageSavePath);
                         item.CopyToAsync(stream);
@@ -197,11 +205,11 @@ namespace MaSoi_Api.Controllers
             return Ok(new Response.Message(1, "Thêm ảnh thành công", null));
         }
 
-        [Route("UpdateInfo_Put")]
-        [HttpPut]
+        [Route("UpdateInfo_Post")]
+        [HttpPost]
         public async Task<IActionResult> UpdateInfo(string Tk, string Name)
         {
-            var user = await _userService.CheckTk(Tk);
+            var user = _userService.CheckTk(Tk);
 
             user.FullName = Name;
 
