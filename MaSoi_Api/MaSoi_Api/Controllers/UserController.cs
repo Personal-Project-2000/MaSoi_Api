@@ -17,10 +17,14 @@ namespace MaSoi_Api.Controllers
     {
         private readonly UserService _userService;
         private readonly IHostingEnvironment _HostEnvironment;
+        private readonly RoomService _roomService;
+        private readonly RoomDetailService _roomDetailService;
 
         public UserController(IOptions<MaSoiDatabaseSettings> maSoiDataBaseSetting, IHostingEnvironment hostingEnvironment)
         {
             _userService = new UserService(maSoiDataBaseSetting);
+            _roomService = new RoomService(maSoiDataBaseSetting);
+            _roomDetailService = new RoomDetailService(maSoiDataBaseSetting);
             _HostEnvironment = hostingEnvironment;
         }
 
@@ -216,6 +220,45 @@ namespace MaSoi_Api.Controllers
             await _userService.UpdateAsync(user);
 
             return Ok(new Response.Message(1, "Cập nhật dữ liệu thành công", null));
+        }
+
+        [Route("CheckRoom_Get")]
+        [HttpGet]
+        public async Task<IActionResult> GetRoom(string Tk)
+        {
+            var check = await _roomDetailService.CheckUser(Tk);
+
+            if(check is null)
+            {
+                return Ok(new Response.Message_GetRoom(0, "Không có trong phòng", null, null));
+            }
+
+            var room = await _roomService.GetAsync1(check.RoomId);
+
+            if (room is null)
+            {
+                return NotFound();
+            }
+
+            var playerList = _roomDetailService.GetAllPlayer(check.RoomId);
+
+            List<Response.Player> playerL = new List<Response.Player>();
+
+            foreach (var item in playerList)
+            {
+                var user = _userService.CheckTk(item.Tk);
+
+                Response.Player player = new Response.Player();
+                player.Tk = item.Tk;
+                player.Img = user.Img;
+                player.Name = user.FullName;
+                player.Status = item.Status;
+                player.Boss = item.Boss;
+
+                playerL.Add(player);
+            }
+
+            return Ok(new Response.Message_GetRoom(1, "Lấy dữ liệu thành công", room, playerL));
         }
     }
 }

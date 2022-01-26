@@ -34,6 +34,10 @@ namespace MaSoi_Api.Services
         public async Task<RoomDetail> GetPlayerHeader(string roomId) =>
             await _roomDetailCollection.Find(x => x.RoomId == roomId).FirstOrDefaultAsync();
 
+        //Kiểm tra tài khoản đã vô phòng nào chưa
+        public async Task<RoomDetail> CheckUser(string Tk) =>
+            await _roomDetailCollection.Find(x => x.Tk == Tk).FirstOrDefaultAsync();
+
         public async Task<RoomDetail> GetPlayer(string Tk, string roomId) =>
             await _roomDetailCollection.Find(x => x.Tk == Tk && x.RoomId == roomId).FirstOrDefaultAsync();
 
