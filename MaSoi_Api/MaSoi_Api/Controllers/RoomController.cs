@@ -173,6 +173,7 @@ namespace MaSoi_Api.Controllers
 
                 var playerHeader = await _roomDetailService.GetPlayerHeader(RoomId);
                 playerHeader.Boss = true;
+                playerHeader.Status = true;
                 await _roomDetailService.UpdateAsync(playerHeader);
             }
             else

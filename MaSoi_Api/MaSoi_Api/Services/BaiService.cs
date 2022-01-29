@@ -28,7 +28,7 @@ namespace MaSoi_Api.Services
         public async Task<List<Bai>> GetAsync() =>
             await _baiCollection.Find(_ => true).ToListAsync();
 
-        public async Task<Bai?> GetAsync(string id) =>
+        public async Task<Bai> GetBai(string id) =>
             await _baiCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         public string BaiName(string id) =>
