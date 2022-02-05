@@ -13,6 +13,7 @@ namespace MaSoi_Api.Response
         public string Img { get; set; }
         public bool Boss { get; set; }
         public bool Status { get; set; }
+        public string BaiId { get; set; }
     }
 
     public class Message_GetRoom

@@ -83,6 +83,8 @@ namespace MaSoi_Api.Controllers
 
             //Hash mật khẩu
             newUser.Pass = Other.MD5.CreateMD5(newUser.Pass);
+            newUser.Img = "";
+            newUser.ImgBack = "";
 
             await _userService.CreateAsync(newUser);
 
@@ -254,6 +256,7 @@ namespace MaSoi_Api.Controllers
                 player.Name = user.FullName;
                 player.Status = item.Status;
                 player.Boss = item.Boss;
+                player.BaiId = item.BaiId;
 
                 playerL.Add(player);
             }

@@ -17,5 +17,6 @@ namespace MaSoi_Api.Models
         public string Tk { get; set; }
         public bool Status { get; set; }
         public bool Boss { get; set; }
+        public string BaiId { get; set; }
     }
 }

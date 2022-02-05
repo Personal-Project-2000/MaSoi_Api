@@ -25,8 +25,8 @@ namespace MaSoi_Api.Services
                 maSoiDataBaseSetting.Value.PlayerCollectionName);
         }
 
-        public async Task<List<Player>> GetAsync() =>
-            await _playerCollection.Find(_ => true).ToListAsync();
+        //public async Task<List<Player>> GetAsync() =>
+        //    await _playerCollection.Find(_ => true).ToListAsync();
 
         public List<Player> GetAllHistory(string Tk) =>
             _playerCollection.Find(x => x.Tk == Tk).ToList();
@@ -43,14 +43,14 @@ namespace MaSoi_Api.Services
         public bool Win(string HistoryId, string Tk) =>
             _playerCollection.Find(x => x.HistoryId == HistoryId & x.Tk == Tk).FirstOrDefault().Win;
 
-        public async Task<Player?> GetAsync(string Tk, string historyId) =>
+        public async Task<Player> GetAsync(string Tk, string historyId) =>
             await _playerCollection.Find(x => x.Tk == Tk && x.HistoryId == historyId).FirstOrDefaultAsync();
 
         public async Task CreateAsync(Player newPlayer) =>
             await _playerCollection.InsertOneAsync(newPlayer);
 
-        public async Task UpdateAsync(string id, Player updatedPlayer) =>
-            await _playerCollection.ReplaceOneAsync(x => x.Id == id, updatedPlayer);
+        public async Task UpdateAsync(Player updatedPlayer) =>
+            await _playerCollection.ReplaceOneAsync(x => x.Id == updatedPlayer.Id, updatedPlayer);
 
         public async Task RemoveAsync(string id) =>
             await _playerCollection.DeleteOneAsync(x => x.Id == id);

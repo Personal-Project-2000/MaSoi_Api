@@ -42,6 +42,7 @@ namespace MaSoi_Api
             services.AddSingleton<BaiService>();
             services.AddSingleton<StoryService>();
             services.AddSingleton<RoomDetailService>();
+            services.AddSingleton<AdressService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

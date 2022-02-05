@@ -16,11 +16,15 @@ namespace MaSoi_Api.Controllers
         private readonly RoomService _roomService;
         private readonly RoomDetailService _roomDetailService;
         private readonly UserService _userService;
+        private readonly HistoryService _historyService;
+        private readonly PlayerService _playerService;
 
-        public RoomController(RoomService roomService, RoomDetailService roomDetailService, UserService userService) { 
+        public RoomController(RoomService roomService, RoomDetailService roomDetailService, UserService userService, HistoryService history, PlayerService player) { 
             _roomService = roomService;
             _roomDetailService = roomDetailService;
             _userService = userService;
+            _historyService = history;
+            _playerService = player;
         }
 
         [HttpGet]
@@ -57,6 +61,7 @@ namespace MaSoi_Api.Controllers
             newPlayer.Tk = Tk;
             newPlayer.Status = true;
             newPlayer.Boss = true;
+            newPlayer.BaiId = "";
 
             await _roomDetailService.InsertPlayer(newPlayer);
 
@@ -104,6 +109,7 @@ namespace MaSoi_Api.Controllers
             newPlayer.Tk = input.Tk;
             newPlayer.Status = false;
             newPlayer.Boss = false;
+            newPlayer.BaiId = "";
 
             await _roomDetailService.InsertPlayer(newPlayer);
 
@@ -135,6 +141,7 @@ namespace MaSoi_Api.Controllers
                 player.Name = user.FullName;
                 player.Status = item.Status;
                 player.Boss = item.Boss;
+                player.BaiId = "";
 
                 playerL.Add(player);
             }
@@ -206,20 +213,20 @@ namespace MaSoi_Api.Controllers
         [Route("Start_Post")]
         public async Task<IActionResult> Start(string RoomId, int Amount)
         {
-            var player =  _roomDetailService.GetAllPlayer(RoomId);
+            var players =  _roomDetailService.GetAllPlayer(RoomId);
 
-            if (player is null)
+            if (players is null)
             {
                 return NotFound();
             }
 
-            if (player.Count() < Amount)
+            if (players.Count() < Amount)
             {
                 return Ok(new Response.Message(2, "Chưa đủ " + Amount + " người chơi", null));
             }
 
             //Kiểm tra tất cả người chơi đã sẳn sàng và số lượng người chơi phải trên 5
-            if (player.Where(x => x.Status == true).Count() == player.Count())
+            if (players.Where(x => x.Status == true).Count() == players.Count())
             {
                 var room = await _roomService.GetAsync1(RoomId);
 
@@ -227,7 +234,24 @@ namespace MaSoi_Api.Controllers
 
                 await _roomService.UpdateAsync(room);
 
-                return Ok(new Response.Message(1, "Tất cả đã sẳn sàng", null));
+                var history = new History();
+                history.StartTime = DateTime.Now+"";
+                history.Time = "";
+
+                await _historyService.CreateAsync(history);
+
+                foreach(var item in players)
+                {
+                    var player = new Models.Player();
+                    player.Tk = item.Tk;
+                    player.HistoryId = history.Id;
+                    player.BaiId = "";
+                    player.Win = false;
+
+                    await _playerService.CreateAsync(player);
+                }
+
+                return Ok(new Response.Message(1, "Tất cả đã sẳn sàng", history.Id));
             }
 
             return Ok(new Response.Message(0, "Có vài người chơi chưa sẳn sàng", null));

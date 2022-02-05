@@ -17,5 +17,6 @@ namespace MaSoi_Api.Models
         public string StoryCollectionName { get; set; } = null!;
         public string BaiCollectionName { get; set; } = null!;
         public string BaiRoomCollectionName { get; set; } = null!;
+        public string AdressCollectionName { get; set; } = null;
     }
 }
